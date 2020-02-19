@@ -50,14 +50,14 @@
   <!--==========================
   Header
   ============================-->
-  <header id="header" class="fixed-top">
+  <header id="header" class="fixed-top navbar">
     <div class="container">
 
       <div class="logo float-left">
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <h1 class="text-light"><a href="#header"><span>NewBiz</span></a></h1> -->
         <a href="#intro" class="scrollto"><img src="img/logo2.png" alt="" class="img-fluid"></a>
-        <span style="font-size: 20px">
+        <span style="font-size: 20px; color: antiquewhite;" >
           Training and Placement Cell
         </span>
       </div>
@@ -115,24 +115,23 @@
   <!--==========================
     Intro Section
   ============================-->
+  
   <section id="intro" class="clearfix">
-    <div class="container">
+    <div id="overlay"></div>
+      <div class="container">
 
-      <div class="intro-img">
-        <img src="img/intro-img.img" alt="" class="img-fluid">
-      </div>
+        <div class="col-md-12" style="text-align: center; color: white;">
 
-      <div class="intro-info">
-        <h2>Training and Placemement cell<br>IIT Indore</h2>
-        <!--
-        <div>
-          <a href="#about" class="btn-get-started scrollto">Get Started</a>
-          <a href="#services" class="btn-services scrollto">Our Services</a>
+          <h2 style="font-weight: 600; font-size: 3rem;">Training and Placemement cell<br>IIT Indore</h2>
+          <!--
+          <div>
+            <a href="#about" class="btn-get-started scrollto">Get Started</a>
+            <a href="#services" class="btn-services scrollto">Our Services</a>
+          </div>
+          -->
         </div>
-        -->
+          
       </div>
-        
-    </div>
   </section><!-- #intro -->
 
   <main id="main">
@@ -166,7 +165,7 @@
             
           <div class="row about-extra">
           <div class="col-lg-6 wow fadeInUp">
-            <img src="images/director.jpg" class="img-fluid" alt="">
+            <img src="images/director.jpg" class="img-fluid" style="width: 100%;" alt="">
           </div>
           <div class="col-lg-6 wow fadeInUp pt-5 pt-lg-0">
             <h4 style="color: white; background-color: #1b56b5; padding: 10px;">From The Director's Desk</h4>
@@ -180,7 +179,7 @@
                     In short, these are the students who are ready to take leadership roles in companies, multinational corporations, financial institutions, public service organizations and others. They will be the ones who through their innovation and entrepreneurship contribute to the rapidly changing global environment and by extension contribute to nation-building and the citizenry at large. We are very proud of our students and have complete faith in their ability—something I endorse both the companies and the students to retain. I wish them all success. 
                   </p> 
                 </div>
-                <button onclick="addtext('more1')" id="myBtn">Read More</button>
+                <button onclick="addtext_direc()" id="myBtn_dir">Read More</button>
                   
             </p>
             
@@ -195,7 +194,7 @@
             <h4 style="color: white; background-color: #1b56b5; padding: 10px;">From the Faculty-In-Charge</h4>
             
             <p>
-              It is with my immense pride that I take this opportunity to invite industries, universities and research organizations to IIT Indore to interact with our dynamic students for Internships/ Training and to conduct Campus Placements. IIT Indore aims to produce top quality technocrats and scientists for the growth of our modern society and cater to the needs of the industries and institutions alike.
+              It is with my immense pride that I take this opportunity to invite industries, universities and research organizations to IIT Indore to interact with our dynamic students for Internships/ Training and to conduct Campus Placements. IIT Indore aims to produce top quality technocrats and scientists for the growth of our modern society and cater to the needs of the industries and institutions alike.<span id="dots1">...</span>
             </p>
             
             <div id="more">
@@ -206,12 +205,12 @@
                    IIT Indore has completed a decade journey and already made a mark for itself with its highly skilled students, and focus on intensive research. Through the campus placements procedure we now intend to forge long term relationships with the companies. I would like to request companies to visit our institute and make full use of the available opportunity to scout the country’s finest minds as per their requirements. We, on our end will ensure that the recruiting process goes smoothly and proves mutually productive to both the institute and the companies.
                   </p> 
                 </div>
-            <button onclick="addtext('more')" id="myBtn">Read More</button>
+            <button onclick="addtext_pof()" id="myBtn_pof">Read More</button>
                 
           </div>
 
           <div class="col-lg-6 background order-lg-2 order-1 wow fadeInUp">
-            <img src="images/facultyincharge.png" class="img-fluid" style="width=100%;" alt="">
+            <img src="images/facultyincharge.png" class="img-fluid" style="width: 100%;" alt="">
           </div>
         </div>
           
@@ -530,10 +529,25 @@ Even though it is still quite young as compared to some of the global universiti
 
 
 <script>
-function addtext(element) {
+function addtext_direc() {
   var dots = document.getElementById("dots");
-  var moreText = document.getElementById(element);
-  var btnText = document.getElementById("myBtn");
+  var moreText = document.getElementById('more1');
+  var btnText = document.getElementById("myBtn_dir");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less";
+    moreText.style.display = "inline";
+  }
+}
+function addtext_pof() {
+  var dots = document.getElementById("dots1");
+  var moreText = document.getElementById('more');
+  var btnText = document.getElementById("myBtn_pof");
 
   if (dots.style.display === "none") {
     dots.style.display = "inline";
@@ -571,6 +585,28 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 }
+
+var $document = $(document),
+    $element = $('.navbar'),
+    navbarDefault = 'solid-nav';
+    navbarTransparent = 'transp-nav';
+
+    fadeInDown = 'fadeInDown';
+
+$document.scroll(function() {
+  if($document.scrollTop() > 200) {
+    $element.addClass(navbarDefault);
+    $element.removeClass(navbarTransparent);
+
+    $element.addClass(fadeInDown);
+  } else {
+    $element.addClass(navbarTransparent);
+    $element.removeClass(navbarDefault);
+
+    $element.removeClass(fadeInDown);
+  }
+});
+
 </script>
 </body>
 </html>
