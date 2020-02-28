@@ -118,7 +118,7 @@
     loop: true,
     items: 1
   });
-
+})(jQuery);
 	
  // Accordian Collapsible
 
@@ -137,7 +137,6 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 } 
-}
 
 /*
 var acc = document.getElementsByClassName("accordion");
@@ -155,6 +154,4 @@ for (i = 0; i < acc.length; i++) {
   });
 }
 */
-
-})(jQuery);
 
