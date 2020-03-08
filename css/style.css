@@ -320,13 +320,13 @@ h6 {
  /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
   background-color: #eee;
-  color: #444;
+  color: rgb(61, 61, 61);
   cursor: pointer;
-  padding: 18px;
-  width: 100%;
+  padding: 9px;
   text-align: left;
   border: none;
   outline: none;
+  border-radius: 10%;
   transition: 0.4s;
 }
 
@@ -336,10 +336,11 @@ h6 {
 
 /* Style the accordion panel. Note: hidden by default */
 .panel {
-  padding: 0 18px;
+  padding: 0 px;
   background-color: white;
-  display: none;
+  max-height: 0;
   overflow: hidden;
+  transition: max-height 0.2s ease-out;
 } 
 /*--------------------------------------------------------------
 # Navigation Menu

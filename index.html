@@ -221,17 +221,16 @@
           <div class="col-lg-6 wow fadeInUp pt-5 pt-lg-0">
             <h4 style="color: white; background-color: #1b56b5; padding: 10px;">From The Director's Desk</h4>
             <p >
-              IIT Indore has come a long way since its inception in 2009, and has quickly shown that as an institute it stands for excellence in technical education and research. With more than 90% placements every year, IIT Indore has managed to provide both the students and the industry a recruiting experience that would enable them to make informed decisions in alignment with their needs and expectations. Also, while these students look to make way into the industry, we have had a fair share that have also gone for higher studies and research programs in premier institutes in India and abroad.<span id="dots">...</span>
+              IIT Indore has come a long way since its inception in 2009, and has quickly shown that as an institute it stands for excellence in technical education and research. With more than 90% placements every year, IIT Indore has managed to provide both the students and the industry a recruiting experience that would enable them to make informed decisions in alignment with their needs and expectations. Also, while these students look to make way into the industry, we have had a fair share that have also gone for higher studies and research programs in premier institutes in India and abroad.
             </p>    
-            <div id="more1">
-              <p > 
-                Through its excellent research facilities, world class faculty and a rigorous curriculum, IIT Indore graduates are second to none in their knowledge base in technology and engineering. They are also equipped with grounding in other areas such as society, science and literature through their courses in the Basic Sciences and Humanities and Social Sciences that every student takes as part of the curriculum at IIT Indore.
-              </p>
-              <p >
-                In short, these are the students who are ready to take leadership roles in companies, multinational corporations, financial institutions, public service organizations and others. They will be the ones who through their innovation and entrepreneurship contribute to the rapidly changing global environment and by extension contribute to nation-building and the citizenry at large. We are very proud of our students and have complete faith in their ability—something I endorse both the companies and the students to retain. I wish them all success. 
-              </p> 
-            </div>
-            <button onclick="addtext_direc()" id="myBtn_dir">Read More</button>
+            <p class="panel"> 
+              Through its excellent research facilities, world class faculty and a rigorous curriculum, IIT Indore graduates are second to none in their knowledge base in technology and engineering.
+              They are also equipped with grounding in other areas such as society, science and literature through their courses in the Basic Sciences and Humanities and Social Sciences that every student takes as part of the curriculum at IIT Indore.
+            <br>
+              In short, these are the students who are ready to take leadership roles in companies, multinational corporations, financial institutions, public service organizations and others.
+              They will be the ones who through their innovation and entrepreneurship contribute to the rapidly changing global environment and by extension contribute to nation-building and the citizenry at large. We are very proud of our students and have complete faith in their ability—something I endorse both the companies and the students to retain. I wish them all success. 
+            </p> 
+            <button class="accordion">Read More</button>
 
           </div>
         </div>
@@ -243,17 +242,21 @@
             <h4 style="color: white; background-color: #1b56b5; padding: 10px;">From the Faculty-In-Charge</h4>
             
             <p >
-              It is with my immense pride that I take this opportunity to invite industries, universities and research organizations to IIT Indore to interact with our dynamic students for Internships/ Training and to conduct Campus Placements. IIT Indore aims to produce top quality technocrats and scientists for the growth of our modern society and cater to the needs of the industries and institutions alike.<span id="dots1">...</span>
+              It is with my immense pride that I take this opportunity to invite industries, universities and research organizations to IIT Indore to interact with our dynamic students for Internships/ Training and to conduct Campus Placements. IIT Indore aims to produce top quality technocrats and scientists for the growth of our modern society and cater to the needs of the industries and institutions alike.
             </p>
-            <div id="more">
-              <p> 
-                The learning environment exposes the students to every opportunity that would help them gain an edge over others and help them succeed in their profession. The modern, ever improving dynamic curriculum at IIT Indore has led to the understanding and development of various technologies as per the needs of the industry and society. Along with their academic pursuits, our versatile students participate and organize various technical, sports and literary activities throughout the year. IIT Indore has also equipped with many state of art research labs, with the aid of national and international collaborations and research funds for our bachelor and research students.   
-              </p>
-              <p>
-              IIT Indore has completed a decade journey and already made a mark for itself with its highly skilled students, and focus on intensive research. Through the campus placements procedure we now intend to forge long term relationships with the companies. I would like to request companies to visit our institute and make full use of the available opportunity to scout the country’s finest minds as per their requirements. We, on our end will ensure that the recruiting process goes smoothly and proves mutually productive to both the institute and the companies.
-              </p> 
-            </div>
-            <button onclick="addtext_pof()" id="myBtn_pof">Read More</button>
+              
+            <p class="panel">
+              The learning environment exposes the students to every opportunity that would help them gain an edge over others and help them succeed in their profession. 
+              The modern, ever improving dynamic curriculum at IIT Indore has led to the understanding and development of various technologies as per the needs of the industry and society.
+              Along with their academic pursuits, our versatile students participate and organize various technical, sports and literary activities throughout the year.
+              IIT Indore has also equipped with many state of art research labs, with the aid of national and international collaborations and research funds for our bachelor and research students.
+            <br>
+              IIT Indore has completed a decade journey and already made a mark for itself with its highly skilled students, and focus on intensive research.
+              Through the campus placements procedure we now intend to forge long term relationships with the companies.
+              I would like to request companies to visit our institute and make full use of the available opportunity to scout the country’s finest minds as per their requirements.
+              We, on our end will ensure that the recruiting process goes smoothly and proves mutually productive to both the institute and the companies.
+            </p>
+            <button class="accordion">Read More</button>
                 
           </div>
 
@@ -264,7 +267,7 @@
       
       </div>
     </section><!-- #about -->
-
+    <br>
     <!--==========================
       Services Section
     ============================-->
@@ -360,7 +363,7 @@
 
     </section>
 
-
+    
   <!--==========================
     Footer
   ============================-->
@@ -449,36 +452,6 @@
 
 
 <script>
-function addtext_direc() {
-  var dots = document.getElementById("dots");
-  var moreText = document.getElementById('more1');
-  var btnText = document.getElementById("myBtn_dir");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = "Read more";
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = "Read less";
-    moreText.style.display = "inline";
-  }
-}
-function addtext_pof() {
-  var dots = document.getElementById("dots1");
-  var moreText = document.getElementById('more');
-  var btnText = document.getElementById("myBtn_pof");
-
-  if (dots.style.display === "none") {
-    dots.style.display = "inline";
-    btnText.innerHTML = "Read more";
-    moreText.style.display = "none";
-  } else {
-    dots.style.display = "none";
-    btnText.innerHTML = "Read less";
-    moreText.style.display = "inline";
-  }
-}
 
 var $document = $(document),
     $element = $('.navbar'),
@@ -507,6 +480,23 @@ $('.autoplayslider').slick({
       autoplay: true,
       autoplaySpeed: 2000,
     });
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.previousElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+      this.innerHTML = "Read More";
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+      this.innerHTML = "Read Less";
+    }
+  });
+}
 
 </script>
   <!-- Contact Form JavaScript File -->
