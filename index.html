@@ -43,7 +43,7 @@
   Header
   ============================-->
   <header id="header" class="fixed-top navbar">
-    <div class="container">
+    <div class="container shifttop">
 
       <div class="logo float-left">
         <!-- Uncomment below if you prefer to use an image logo -->
@@ -58,7 +58,7 @@
         <ul>
           <li class="active"><a href="#intro" class="scrollto">Home</a></li>
           
-          <li class="drop-down"><a href="#why-us" class="scrollto">Why Recruit</a>
+          <li class="drop-down":active ><a href="#why-us" class="scrollto">Why Recruit</a>
             <ul>
               <li><a href="index.html#why-us" class="scrollto">Why IIT Indore</a></li>
               <li><a href="student.html">Students</a></li>
@@ -107,7 +107,7 @@
   <!--==========================
     Intro Section
   ============================-->
-  
+<div class="main-content shiftright">  
   <section id="intro" class="clearfix">
     <div id="overlay"></div>
       <div class="container">
@@ -125,9 +125,6 @@
           
       </div>
   </section><!-- #intro -->
-
-  <main id="main">
-
     
     <!--==========================
       Portfolio Section
@@ -363,7 +360,7 @@
 
     </section>
 
-    
+
   <!--==========================
     Footer
   ============================-->
@@ -382,7 +379,7 @@
             <ul>
               <li><a href="index.html" class="scrollto">Home</a></li>
               <li><a href="contactus.html">Contact us</a></li>
-              <li><a href="index.html#about">About us</a></li>
+              <li><a href="index.html#about" class="scrollto">About us</a></li>
               <li><a href="#">Privacy policy</a></li>
             </ul>
           </div>
@@ -423,7 +420,7 @@
       </div>
     </div>
   </footer><!-- #footer -->
-
+</div>
   <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
   <!-- Uncomment below i you want to use a preloader -->
   <!-- <div id="preloader"></div> -->
@@ -442,38 +439,32 @@
   <script src="lib/lightbox/js/lightbox.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
   <script src="lib/JSCarousel/purejscarousel.js"></script>
-  <script>
-    
-    
-
-  </script>
-
-
-
 
 <script>
 
 var $document = $(document),
     $element = $('.navbar'),
-    navbarDefault = 'solid-nav';
-    navbarTransparent = 'transp-nav';
+    navbarDefault = 'solid-nav',
+    navbarTransparent = 'transp-nav',
+    $width = $(document).width(),
+    fadeInDown = 'fadeInDown',
+    $mainContent = $('.main-content'),
 
-    fadeInDown = 'fadeInDown';
+if($width < 992){
+  $document.scroll(function() {
+    if($document.scrollTop() > 200) {
+      $element.addClass(navbarDefault);
+      $element.removeClass(navbarTransparent);
 
-$document.scroll(function() {
-  if($document.scrollTop() > 200) {
-    $element.addClass(navbarDefault);
-    $element.removeClass(navbarTransparent);
+      $element.addClass(fadeInDown);
+    } else {
+      $element.addClass(navbarTransparent);
+      $element.removeClass(navbarDefault);
 
-    $element.addClass(fadeInDown);
-  } else {
-    $element.addClass(navbarTransparent);
-    $element.removeClass(navbarDefault);
-
-    $element.removeClass(fadeInDown);
-  }
-});
-
+      $element.removeClass(fadeInDown);
+    }
+  });
+}
 $('.autoplayslider').slick({
       slidesToShow: 3,
       slidesToScroll: 1,

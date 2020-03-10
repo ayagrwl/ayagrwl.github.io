@@ -27,17 +27,21 @@
   new WOW().init();
 
   // Header scroll class
-  $(window).scroll(function() {
-    if ($(this).scrollTop() > 100) {
+  $width = $(document).width()
+  if($width < 972){
+    $(window).scroll(function() {
+      if ($(this).scrollTop() > 100) {
+        $('#header').addClass('header-scrolled');
+      } else {
+        $('#header').removeClass('header-scrolled');
+      }
+    });
+  
+    if ($(window).scrollTop() > 100) {
       $('#header').addClass('header-scrolled');
-    } else {
-      $('#header').removeClass('header-scrolled');
     }
-  });
-
-  if ($(window).scrollTop() > 100) {
-    $('#header').addClass('header-scrolled');
   }
+  
 
   // Smooth scroll for the navigation and links with .scrollto classes
   $('.main-nav a, .mobile-nav a, .scrollto').on('click', function() {
