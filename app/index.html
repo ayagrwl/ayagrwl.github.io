@@ -1,0 +1,250 @@
+<html>
+
+<head>
+  <title>Augmented Reality Marker Detector</title>
+
+  <script type="text/javascript" src="libs/polyfill.js"></script> 
+  
+  <script type="text/javascript" src="libs/cv.js"></script> 
+  <script type="text/javascript" src="libs/aruco.js"></script> 
+
+  <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+  <!-- marker dictionary contains mapping of markerID to locations -->
+  <script type="text/javascript" src="marker_dictionary.js"></script>
+  <script>
+    var video, canvas, context, output_log, log_text, imageData, detector;
+    var started = false, speech_text;
+    let ps;
+    var detected_locations = [];
+    function onLoad(){
+      video = document.getElementById("video");
+      canvas = document.getElementById("canvas");
+      context = canvas.getContext("2d");
+      output_log = document.getElementById("output_log");
+    
+      canvas.width = parseInt(canvas.style.width);
+      canvas.height = parseInt(canvas.style.height);
+      
+      if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+      }
+      
+      if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function(constraints) {
+          var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+          
+          if (!getUserMedia) {
+            return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+          }
+
+          return new Promise(function(resolve, reject) {
+            getUserMedia.call(navigator, constraints, resolve, reject);
+          });
+        }
+      }
+      
+      navigator.mediaDevices
+        .getUserMedia({ video:  { facingMode: "environment" } })
+
+        // For Rear Camera as preferred Camera(not exact)
+        // .getUserMedia({video: { facingMode: "environment" } })
+
+        .then(function(stream) {
+          if ("srcObject" in video) {
+            video.srcObject = stream;
+          } else {
+            video.src = window.URL.createObjectURL(stream);
+          }
+        })
+        .catch(function(err) {
+          console.log(err.name + ": " + err.message);
+        }
+      );
+        
+      detector = new AR.Detector({
+        dictionaryName: 'ARUCO'
+      });
+
+      requestAnimationFrame(tick);
+    }
+    
+    function tick(){
+      requestAnimationFrame(tick);
+      
+      //Ready State shows readiness of state of the media
+      //HAVE_ENOUGH_DATA: Enough data is available
+      //—and the download rate is high enough
+      //—that the media can be played through to the end without interruption.
+      if (video.readyState === video.HAVE_ENOUGH_DATA){
+        snapshot();
+
+        var markers = detector.detect(imageData);
+        //markers is an array of all marker info in imageData(there can be multiple markers in a single image)
+        //In single element of markers array, 
+        // 3 parameters: corners, hammingDistance, id
+        //corners: Array of 4 pairs(x, y) representing 4 corners of bounding rectangle
+        //id: integer, markerID
+
+        // console.log(markers)
+        drawCorners(markers);
+        drawId(markers);
+        const d = new Date();
+        let ms = d.getMilliseconds();
+        let ss = d.getSeconds();
+        if(ms%100 <= 10){
+          // console.log("Text outputted " + log_text);
+          printOutput();
+        }
+        if(started === false){
+          ps = ss;
+          started = true;
+        }
+        var speak_now = false;
+        console.log("ps: " + ps + " ss: " + ss);
+        if(Math.abs(ss-ps) >= 3){
+          speak_now = true;
+          ps = ss;
+        }
+        if(speak_now === true){
+          console.log("Speech Now!");
+          speak_text();
+          console.log(speech_text);
+          speak_now = false;
+        }
+
+        // output_log.innerHTML = ms;
+        // console.log(ms);
+        // printOutput();
+      }
+    }
+    
+    //Draws video image on canvas
+    function snapshot(){
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+          
+    function drawCorners(markers){
+      var corners, corner, i, j;
+    
+      context.lineWidth = 3;
+
+      for (i = 0; i !== markers.length; ++ i){
+        corners = markers[i].corners;
+        
+        context.strokeStyle = "red";
+        context.beginPath();
+        
+        for (j = 0; j !== corners.length; ++ j){
+          corner = corners[j];
+          context.moveTo(corner.x, corner.y);
+          corner = corners[(j + 1) % corners.length];
+          context.lineTo(corner.x, corner.y);
+        }
+
+        context.stroke();
+        context.closePath();
+        
+        context.strokeStyle = "green";
+        context.strokeRect(corners[0].x - 2, corners[0].y - 2, 4, 4);
+      }
+    }
+
+    function drawId(markers){
+      var corners, corner, x, y, i, j;
+      
+      context.strokeStyle = "blue";
+      context.lineWidth = 1;
+      
+      for (i = 0; i !== markers.length; ++ i){
+        corners = markers[i].corners;
+        
+        x = Infinity;
+        y = Infinity;
+        
+        for (j = 0; j !== corners.length; ++ j){
+          corner = corners[j];
+          
+          x = Math.min(x, corner.x);
+          y = Math.min(y, corner.y);
+        }
+        
+        //Drawing markerID on top left corner of bounding box
+        //Here, instead of markerID, we will draw the word
+        //mapped to that markerID using some array or Dictionary
+        
+        context.strokeText(taggedLoc[markers[i].id], x, y)
+      }
+      log_text = "";
+      detected_locations.length = 0;
+      for(i=0; i !== markers.length; ++ i){
+        // console.log(i);
+        detected_locations.push(taggedLoc[markers[i].id]);
+        // log_text += "<h1>" + taggedLoc[markers[i].id] + " Detected!</h1>";
+      }
+      if(markers.length === 0){
+        detected_locations.length = 0;
+        log_text = "";
+        // log_text = "";
+      }
+      console.log(detected_locations.length);
+    }
+
+    function printOutput(){
+      for(i=0; i !== detected_locations.length; ++ i){
+        log_text += "<h1>" + detected_locations[i] + " Detected!</h1>";
+      }
+      speech_text = "";
+      if(detected_locations.length === 1){
+        speech_text = detected_locations[0] + " is in front of you!";
+      }
+      if(detected_locations.length > 1){
+        for(i=0; i != detected_locations.length; ++ i){
+          if(i === detected_locations.length-1){
+            speech_text += detected_locations[i] + " are in front of you!";
+          }
+          else if(i === detected_locations.length-2){
+            speech_text += detected_locations[i] + " and ";
+          }
+          else{
+            speech_text += detected_locations[i] + ", ";
+          }
+        }
+      }
+      output_log.innerHTML = log_text;
+
+      detected_locations.length = 0;
+      log_text = "";
+      console.log("Number of locations: " + detected_locations.length);
+    }
+
+    function speak_text(){
+      if ('speechSynthesis' in window) { 
+        let working = new SpeechSynthesisUtterance(speech_text);
+        speech_text = ""; 
+        window.speechSynthesis.speak(working); 
+      } 
+      else{ 
+        document.write("Browser not supported") 
+      }
+    }
+
+    window.onload = onLoad;
+  </script>
+
+</head>
+
+<body style="font-family: monospace;">
+
+  <center>
+    <div style="margin: 10px;"><strong>-= Augmented Reality Marker Detector =-</strong></div>
+    <video id="video" autoplay="true" style="display:none;"></video>
+    <!-- HTML <canvas> element is used to draw graphics via JavaScript -->
+    <canvas id="canvas" style="width:640px; height:480px;"></canvas>
+    <article id = "output_log"></article>
+    <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong></div>
+  </center>
+
+</body>
+  
+</html>
