@@ -44,7 +44,7 @@
       }
       
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video:  { facingMode: "environment" } })
 
         // For Rear Camera as preferred Camera(not exact)
         // .getUserMedia({video: { facingMode: "environment" } })
