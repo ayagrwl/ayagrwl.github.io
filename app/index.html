@@ -7,11 +7,27 @@
   
   <script type="text/javascript" src="libs/cv.js"></script> 
   <script type="text/javascript" src="libs/aruco.js"></script> 
+  <script type="text/javascript" src="libs/ml5.min.js"></script>
+
 
   <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
   <!-- marker dictionary contains mapping of markerID to locations -->
   <script type="text/javascript" src="marker_dictionary.js"></script>
+
   <script>
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+
+    let ssd_detector = ml5.objectDetector('cocossd');
+    var recognition = new SpeechRecognition();
+    let shouldDetectObjects = false;
+    let intervalDetections = {};
+
+    var grammar = '#JSGF V1.0; grammar commands; public <command> = hello | start | stop | object ;'
+    var speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+
     var video, canvas, context, output_log, log_text, imageData, detector;
     var started = false, speech_text;
     let ps;
@@ -21,10 +37,15 @@
       canvas = document.getElementById("canvas");
       context = canvas.getContext("2d");
       output_log = document.getElementById("output_log");
-    
+
       canvas.width = parseInt(canvas.style.width);
       canvas.height = parseInt(canvas.style.height);
       
+      document.body.onclick = function() {
+        startAudio();
+        setTimeout(stopAudio, 3000);
+      }
+
       if (navigator.mediaDevices === undefined) {
         navigator.mediaDevices = {};
       }
@@ -67,10 +88,54 @@
 
       requestAnimationFrame(tick);
     }
+
     
+
+    function startAudio(){
+      recognition.abort();
+      recognition.start();
+      console.log('Ready to receive a color command.');
+    }
+
+    function stopAudio(){
+      recognition.stop();
+      console.log('Not listening to you anymore.');
+    }
+
+    function speakDetectedObjects(){
+      detectedObjectNames = Object.keys(intervalDetections);
+      intervalDetections = {};
+
+      console.log("Detected object names: ", detectedObjectNames);
+      if(!detectedObjectNames.length){
+        objectsString = "No Objects Detected";
+      }
+      else {
+        objectsString = "Following Objects detected: ";
+        detectedObjectNames.forEach(element => {objectsString += `${element}, `});
+      }
+      console.log("SpeechText: ", objectsString);
+      speak_string(objectsString);
+    }
+
+    recognition.onresult = function(event) {
+      var spokenCommand = event.results[0][0].transcript;
+      console.log(spokenCommand);
+
+      if(spokenCommand === "start"){
+        shouldDetectObjects = true;
+        setTimeout( () => {
+          shouldDetectObjects = false;
+        }, 5000);
+        setTimeout( () => {
+          speakDetectedObjects();
+        }, 3300);
+      }
+    }
+
     function tick(){
       requestAnimationFrame(tick);
-      
+
       //Ready State shows readiness of state of the media
       //HAVE_ENOUGH_DATA: Enough data is available
       //—and the download rate is high enough
@@ -79,6 +144,15 @@
         snapshot();
 
         var markers = detector.detect(imageData);
+
+        // ssd_detector.then(detector => (detector.detect(imageData, drawObjectBoundary)));
+        if(shouldDetectObjects) {
+          ssd_detector.then(detector => (detector.detect(imageData, drawObjectBoundary)));
+        }
+
+        // console.log(faltuVar);
+        // var objects = predictObject(imageData);
+
         //markers is an array of all marker info in imageData(there can be multiple markers in a single image)
         //In single element of markers array, 
         // 3 parameters: corners, hammingDistance, id
@@ -100,16 +174,18 @@
           started = true;
         }
         var speak_now = false;
-        console.log("ps: " + ps + " ss: " + ss);
+        // console.log("ps: " + ps + " ss: " + ss);
         if(Math.abs(ss-ps) >= 3){
           speak_now = true;
           ps = ss;
         }
         if(speak_now === true){
-          console.log("Speech Now!");
-          speak_text();
-          console.log(speech_text);
-          speak_now = false;
+          if(speech_text !== ""){
+            console.log("Speaking now! ");
+            speak_text();
+            console.log(speech_text);
+            speak_now = false;
+          }
         }
 
         // output_log.innerHTML = ms;
@@ -123,7 +199,24 @@
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     }
-          
+    
+    function drawObjectBoundary(error, objects){
+      if(objects){
+        console.log(objects);
+        
+        for(let i=0;i<objects.length; i++){
+          let object = objects[i];
+
+          context.strokeStyle = "green";          
+          context.strokeRect(object.x, object.y, object.width, object.height);
+          context.strokeText(object.label, object.x + 10, object.y + 24);
+          intervalDetections[object.label] = 1;
+        }
+      } else {
+        console.log(error);
+      }
+    }
+
     function drawCorners(markers){
       var corners, corner, i, j;
     
@@ -187,7 +280,7 @@
         log_text = "";
         // log_text = "";
       }
-      console.log(detected_locations.length);
+      // console.log(detected_locations.length);
     }
 
     function printOutput(){
@@ -215,13 +308,25 @@
 
       detected_locations.length = 0;
       log_text = "";
-      console.log("Number of locations: " + detected_locations.length);
+      // console.log("Number of locations: " + detected_locations.length);
     }
 
     function speak_text(){
-      if ('speechSynthesis' in window) { 
+      if ('speechSynthesis' in window) {
         let working = new SpeechSynthesisUtterance(speech_text);
         speech_text = ""; 
+        window.speechSynthesis.speak(working); 
+      } 
+      else{ 
+        document.write("Browser not supported") 
+      }
+    }
+
+
+
+    function speak_string(someText){
+      if ('speechSynthesis' in window) { 
+        let working = new SpeechSynthesisUtterance(someText);
         window.speechSynthesis.speak(working); 
       } 
       else{ 
@@ -242,6 +347,9 @@
     <!-- HTML <canvas> element is used to draw graphics via JavaScript -->
     <canvas id="canvas" style="width:640px; height:480px;"></canvas>
     <article id = "output_log"></article>
+    <button onclick="startAudio()"> Start Audio </button>
+    <button onclick="stopAudio()"> Stop Audio </button>
+    
     <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong></div>
   </center>
 
