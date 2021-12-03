@@ -230,6 +230,7 @@
           context.strokeRect(object.x, object.y, object.width, object.height);
 
           context.font = '30px serif';
+          context.lineWidth = 2;
           context.strokeStyle = "red";          
           context.strokeText(object.label, object.x + 10, object.y + 24);
           intervalDetections[object.label] = 1;
