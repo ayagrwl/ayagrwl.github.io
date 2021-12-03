@@ -38,8 +38,11 @@
       context = canvas.getContext("2d");
       output_log = document.getElementById("output_log");
 
-      canvas.width = parseInt(canvas.style.width);
-      canvas.height = parseInt(canvas.style.height);
+      // canvas.width = parseInt(canvas.style.width);
+      // canvas.height = parseInt(canvas.style.height);
+
+      canvas.width = (window.innerWidth*4)/5;
+      canvas.height = (window.innerHeight*4)/5;
       
       document.body.onclick = function() {
         startAudio();
@@ -129,7 +132,7 @@
         }, 5000);
         setTimeout( () => {
           speakDetectedObjects();
-        }, 3300);
+        }, 5100);
       }
     }
 
@@ -147,11 +150,8 @@
 
         // ssd_detector.then(detector => (detector.detect(imageData, drawObjectBoundary)));
         if(shouldDetectObjects) {
-          ssd_detector.then(detector => (detector.detect(imageData, drawObjectBoundary)));
+          ssd_detector.then(object_detector => (object_detector.detect(imageData, drawObjectBoundary)));
         }
-
-        // console.log(faltuVar);
-        // var objects = predictObject(imageData);
 
         //markers is an array of all marker info in imageData(there can be multiple markers in a single image)
         //In single element of markers array, 
@@ -202,7 +202,7 @@
     
     function drawObjectBoundary(error, objects){
       if(objects){
-        console.log(objects);
+        // console.log("objects right now: ", objects);
         
         for(let i=0;i<objects.length; i++){
           let object = objects[i];
@@ -339,18 +339,19 @@
 
 </head>
 
-<body style="font-family: monospace;">
+<body style="font-family: monospace; background-color:#ADD8E6;">
 
   <center>
-    <div style="margin: 10px;"><strong>-= Augmented Reality Marker Detector =-</strong></div>
+    <div style="margin: 10px;"><h1><strong>Way Finding App For Blinds</strong></h1></div>
     <video id="video" autoplay="true" style="display:none;"></video>
     <!-- HTML <canvas> element is used to draw graphics via JavaScript -->
-    <canvas id="canvas" style="width:640px; height:480px;"></canvas>
+    <!-- <canvas id="canvas" style="width:1000px; height:640px;"></canvas> -->
+    <canvas id="canvas"></canvas>
     <article id = "output_log"></article>
     <button onclick="startAudio()"> Start Audio </button>
     <button onclick="stopAudio()"> Stop Audio </button>
     
-    <div style="margin: 15px;"><strong>Powered by <a href="https://damianofalcioni.github.io/js-aruco2/">js-aruco2</a></strong></div>
+    <div style="margin: 15px;"><strong><a href="https://github.com/ayagrwl/ayagrwl.github.io/tree/master/app">Github Source</a></strong></div>
   </center>
 
 </body>
