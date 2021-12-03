@@ -23,7 +23,7 @@
     let shouldDetectObjects = false;
     let intervalDetections = {};
 
-    var grammar = '#JSGF V1.0; grammar commands; public <command> = hello | start | stop | debug ;'
+    var grammar = '#JSGF V1.0; grammar commands; public <command> = hello | start | stop | dekho ;'
     var speechRecognitionList = new SpeechGrammarList();
     speechRecognitionList.addFromString(grammar, 1);
     recognition.grammars = speechRecognitionList;
@@ -120,13 +120,18 @@
       console.log("SpeechText: ", objectsString);
       speak_string(objectsString);
     }
+    
+    var intervalId = 0;
 
     recognition.onresult = function(event) {
       var spokenCommand = event.results[0][0].transcript;
       console.log(spokenCommand);
       
-      let intervalId = 0;
-      if(spokenCommand === "start"){
+      if(spokenCommand.toLowerCase() === "hello"){
+        console.log("Speech Synthesis Working!");
+      }
+
+      else if(spokenCommand.toLowerCase() === "start"){
         shouldDetectObjects = true;
         setTimeout( () => {
           shouldDetectObjects = false;
@@ -136,14 +141,14 @@
         }, 5100);
       }
       
-      else if(spokenCommand === "debug") {
+      else if(spokenCommand.toLowerCase() === "dekho") {
         shouldDetectObjects = true;
         intervalId = setInterval(() => {
           speakDetectedObjects();
         }, 5000);
       }
 
-      else if(spokenCommand === "stop") {
+      else if(spokenCommand.toLowerCase() === "stop") {
         shouldDetectObjects = false;
         clearInterval(intervalId);
       }
@@ -221,7 +226,11 @@
           let object = objects[i];
 
           context.strokeStyle = "green";          
+          context.lineWidth = 5;
           context.strokeRect(object.x, object.y, object.width, object.height);
+
+          context.font = '30px serif';
+          context.strokeStyle = "red";          
           context.strokeText(object.label, object.x + 10, object.y + 24);
           intervalDetections[object.label] = 1;
         }
