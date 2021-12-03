@@ -8,7 +8,15 @@ for(var i = 0; i < num_loc; i++) {
 }
 
 taggedLoc[0] = "Test";
-taggedLoc[1] = "Maa chuda";
+taggedLoc[1] = "Bedroom 1";
+taggedLoc[2] = "Bedroom 2";
+taggedLoc[3] = "Kitchen";
+taggedLoc[4] = "Drawing Room";
+taggedLoc[5] = "Guest Room";
+taggedLoc[6] = "Toilet";
+taggedLoc[7] = "Bathroom";
+taggedLoc[8] = "Staircase";
+
 taggedLoc[10] = "Drawing Room";
 taggedLoc[25] = "Canteen";
 taggedLoc[50] = "Central Hall";

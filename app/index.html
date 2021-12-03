@@ -23,7 +23,7 @@
     let shouldDetectObjects = false;
     let intervalDetections = {};
 
-    var grammar = '#JSGF V1.0; grammar commands; public <command> = hello | start | stop | object ;'
+    var grammar = '#JSGF V1.0; grammar commands; public <command> = hello | start | stop | debug ;'
     var speechRecognitionList = new SpeechGrammarList();
     speechRecognitionList.addFromString(grammar, 1);
     recognition.grammars = speechRecognitionList;
@@ -124,7 +124,8 @@
     recognition.onresult = function(event) {
       var spokenCommand = event.results[0][0].transcript;
       console.log(spokenCommand);
-
+      
+      let intervalId = 0;
       if(spokenCommand === "start"){
         shouldDetectObjects = true;
         setTimeout( () => {
@@ -133,6 +134,18 @@
         setTimeout( () => {
           speakDetectedObjects();
         }, 5100);
+      }
+      
+      else if(spokenCommand === "debug") {
+        shouldDetectObjects = true;
+        intervalId = setInterval(() => {
+          speakDetectedObjects();
+        }, 5000);
+      }
+
+      else if(spokenCommand === "stop") {
+        shouldDetectObjects = false;
+        clearInterval(intervalId);
       }
     }
 
@@ -348,8 +361,11 @@
     <!-- <canvas id="canvas" style="width:1000px; height:640px;"></canvas> -->
     <canvas id="canvas"></canvas>
     <article id = "output_log"></article>
-    <button onclick="startAudio()"> Start Audio </button>
-    <button onclick="stopAudio()"> Stop Audio </button>
+
+    <div>
+      <button onclick="startAudio()"> Start Audio </button>
+      <button onclick="stopAudio()"> Stop Audio </button>
+    </div>
     
     <div style="margin: 15px;"><strong><a href="https://github.com/ayagrwl/ayagrwl.github.io/tree/master/app">Github Source</a></strong></div>
   </center>
